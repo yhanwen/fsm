@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery Mobile: Demos and Documentation</title>
+        <link rel="stylesheet" href="http://a.tbcdn.cn/??p/global/1.0/global-min.css,app/dp/s/html5/css/common-min.css" />
+        <!--[if lt IE 9]>
+        <script src="http://a.tbcdn.cn/app/dp/s/html5/js/??html5shiv-min.js,modernizr-v2.5.3-min.js"></script>
+        <![endif]-->
+        <script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js,p/global/1.0/global-min.js"></script>
+        <script type="text/javascript" src="../src/FSM.js"></script>
+    </head>
+    <body>
+        <style type="text/css">
+            .menu {
+                width:200px;
+            }
+            .k-select{
+                height:30px;
+                background:#f60;
+                color:#fff;
+            }
+            .k-box{
+                cursor:pointer;
+            }
+            .hover {
+                background:#888;
+                color:#fff;
+            }
+        </style>
+        <div class="menu" id="J_slideMenu">
+            <div class="k-select"></div>
+            <div class="k-box" style="display:none">
+                <div class="k-option" data-value="1" data-text="选项1">选项1</div>
+                <div class="k-option" data-value="2" data-text="选项2">选项2</div>
+                <div class="k-option" data-value="3" data-text="选项3">选项3</div>
+                <div class="k-option" data-value="4" data-text="选项4">选项4</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var dropMenu = new SlideMenuGlobal("#J_slideMenu");
+            dropMenu.on("select",function(e){
+                console.log(e);
+            })
+        </script>
+    </body>
+</html>
