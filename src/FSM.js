@@ -34,16 +34,12 @@ var FSMWidgets, SlideMenuGlobal;
         defineEvents:function(){
             var _this = this,
             events = this.events;
-            for(k in events){
-                (function(k){
-                    var fn = events[k];
-                    fn.call(_this,function(event){
-                        _this.fire(k,event);
-                    });
-                    _this.on(k,_this.handleEvents);
-                })(k)
-                
-            }
+            S.each(events,function(fn,k){
+                fn.call(_this,function(event){
+                    _this.fire(k,event);
+                });
+                _this.on(k,_this.handleEvents);
+            });
         }
     }
     S.augment(FSM, S.EventTarget, proto);
@@ -124,7 +120,7 @@ var FSMWidgets, SlideMenuGlobal;
             events:{
                 "unfoldmenu":function(fn){
                     E.on(_this.container,"click",function(e){
-                        fn();
+                        if(_this.isFold==true)fn();
                     });
                 },
                 "foldmenu":function(fn){
@@ -144,6 +140,9 @@ var FSMWidgets, SlideMenuGlobal;
                             if(timeout)clearTimeout(timeout);
                             fn();
                         } 
+                    });
+                    E.on(_this.select,"click",function(e){
+                        if(_this.isFold==false)fn();
                     });
                 },
                 "overitem":function(fn){
@@ -181,8 +180,10 @@ var FSMWidgets, SlideMenuGlobal;
             var _this = this,
             slideBox = _this.slideBox;
             if(!_this.isFold)return;
-            _this.isFold = false;
-            D.show(slideBox);
+            
+            S.one(slideBox).fadeIn(0.3,function(){
+            	_this.isFold = false;
+            });
         },
         fold:function(){
             var _this = this,
@@ -190,8 +191,10 @@ var FSMWidgets, SlideMenuGlobal;
             slideBox = _this.slideBox;
             if(_this.isFold)return;
             D.removeClass(options,"hover");
-            _this.isFold = true;
-            D.hide(slideBox);
+            
+            S.one(slideBox).slideUp(0.2,function(){
+            	_this.isFold = true;
+            });
         },
         highlightItem:function(curItem){
             var _this = this,

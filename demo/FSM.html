@@ -15,14 +15,38 @@
         <style type="text/css">
             .menu {
                 width:200px;
+                margin:30px;
+                position:relative;
+                cursor:pointer;
+            }
+            .menu .arrow {
+            	position:absolute;
+            	right:6px;
+            	top:7px;
+            	color:#fff;
+            	font-family: Arial;
+            	font-weight:normal;
             }
             .k-select{
                 height:30px;
                 background:#f60;
                 color:#fff;
+                padding-left:10px;
+                line-height:30px;
+                border:solid 1px #555;
             }
             .k-box{
                 cursor:pointer;
+                line-height:30px;
+                border:solid 1px #555;
+                border-width:0 1px 1px 1px;
+                border-radius: 0 0 5px 5px;
+                box-shadow:0px 3px 3px rgba(0,0,0,0.2);
+            }
+            .k-option{
+            	cursor:pointer;
+                padding-left:10px;
+                line-height:30px;
             }
             .hover {
                 background:#888;
@@ -30,6 +54,7 @@
             }
         </style>
         <div class="menu" id="J_slideMenu">
+        	<b class="arrow">▾</b>
             <div class="k-select"></div>
             <div class="k-box" style="display:none">
                 <div class="k-option" data-value="1" data-text="选项1">选项1</div>
