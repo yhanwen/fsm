@@ -1,8 +1,9 @@
 # 基于FSM的组件设计
 
-有限状态机（FSM）（维基百科）是设计和实现事件驱动程序内复杂行为组织原则的有力工具
+有限状态机（FSM）（[维基百科](http://www.google.com.hk/url?sa=t&rct=j&q=有限状态机&source=web&cd=1&ved=0CCUQFjAA&url=http%3A%2F%2Fzh.wikipedia.org%2Fzh%2F%25E6%259C%2589%25E9%2599%2590%25E7%258A%25B6%25E6%2580%2581%25E6%259C%25BA&ei=5qFiUK_cF4STiAe53ID4Dg&usg=AFQjCNHgeiLvIwRpynGNcu3_L9ceXKrP_Q)）是设计和实现事件驱动程序内复杂行为组织原则的有力工具
 
 早在2007年，IBM的工程师就提出在在JAVASCRIPT中使用有限状态机来实现组件的方法，原文地址如下：
+
 《JavaScript 中的有限状态机》http://www.ibm.com/developerworks/cn/web/wa-finitemach/
 
 现在结合KISSY等现代JS库和框架提供的强大的自定义事件的功能，我们可以利用有限状态机设计出代码层次清晰，结构优雅的前端交互组件。
@@ -10,9 +11,9 @@
 今天，我们会通过设计并实现一个下拉选择（模拟select）组件来一步步说明如何利用FSM和KISSY来设计和实现一个有复杂行为的交互组件。
 
 我们的工作会分成三个步骤来进行：
-第一步：设计组件状态，用户行为和组件行为
-第二步：通过代码来描述设计出来的内容
-第三步：实现一个有限状态机让组件工作起来
+ * 第一步：设计组件状态，用户行为和组件行为
+ * 第二步：通过代码来描述设计出来的内容
+ * 第三步：实现一个有限状态机让组件工作起来
 
 =====第一步：设计阶段=======
 
@@ -324,27 +325,21 @@
 代码结构如下：
 
 	initState:"fold",
-	
-	states:{
-	
+	states:{	
 	    //收起（初始状态）
-	
 	    "fold":{
 	
 	    },
 	
 	    //展开状态
-	
 	    "unfold":{
 	
 	    },
 	
 	    //高亮状态
-	
 	    "highlight":{
 	
 	    }   
-	
 	},
 	
 	events:{
@@ -373,34 +368,20 @@ FSM需要2个功能：
 代码如下：
 
 	function FSM(config){
-	
-	    this.config = config;
-	
-	    this.currentState = this.config.initState;
-	
-	    this.nextState = null;
-	
+	    this.config = config;	
+	    this.currentState = this.config.initState;	
+	    this.nextState = null;	
 	    this.states = this.config.states;
-	
 	    this.events = this.config.events;
-	
-	    
-	
-	    this.defineEvents();
-	
+	    this.defineEvents();	
 	}
 	
 	
 	
-	var proto = {
-	
-	    //事件驱动状态转换(表现层)
-	
-	    handleEvents:function(event){
-	
-	        if(!this.currentState)return;
-	
-	        
+	var proto = {	
+	    //事件驱动状态转换(表现层)	
+	    handleEvents:function(event){	
+	        if(!this.currentState)return;	        
 	
 	        var actionTransitionFunction = this.states[this.currentState][event.type];
 	
