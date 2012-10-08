@@ -25,12 +25,16 @@
 
 1.收起状态（fold）:
 
+![](http://img01.taobaocdn.com/tps/i1/T15gPTXoVfXXb_CEfo-229-64.png)
+
 组件的初始状态，用户可能会进行以下操作：
 
     展开下拉框（unfoldmenu）转移到展开状态（unfold）
 
 
 2.展开状态（unfold）:
+
+![](http://img01.taobaocdn.com/tps/i1/T1UZvTXcRiXXb1j7My-217-170.png)
 
 用户展开下拉框的状态，用户可能会进行以下操作：
 
@@ -40,6 +44,8 @@
 
 3.高亮状态（highlight）:
 
+![](http://img02.taobaocdn.com/tps/i2/T1_.rTXeNcXXbFCsHX-242-186.png)
+
 鼠标经过选项时，高亮经过的选项，用户可能会进行以下操作：
 
     收起下拉框（foldmenu）转移到收起状态（fold）
@@ -48,6 +54,8 @@
 
 
 以上就是这个小组件可能会有的三种状态，用一个状态转换图来表示如下：
+
+![](http://img03.taobaocdn.com/tps/i3/T1xFDUXoXaXXavm5fP-510-412.png)
 
  * 在状态描述中包含了触发状态发生转移的动作（事件）
  * 可以很明显的看出这些事件并不是浏览器中原生的事件。
@@ -66,6 +74,8 @@
 定义组件行为：
 
 在状态转移的过程中，组件本身会有很多动作，如显示下拉框等，我们接下来在上面的状态图中加入转移过程中组件的动作
+
+![](http://img04.taobaocdn.com/tps/i4/T1J7nSXfxlXXavm5fP-510-412.png)
 
     fold():收起下拉框
     unfold():展开下拉框
