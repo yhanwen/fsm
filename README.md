@@ -313,22 +313,15 @@ FSM需要2个功能：
 	var proto = {	
 	    //事件驱动状态转换(表现层)	
 	    handleEvents:function(event){	
-	        if(!this.currentState)return;	        
-	
-	        var actionTransitionFunction = this.states[this.currentState][event.type];
-	
-	        if(!actionTransitionFunction)return;
-	
-	        var nextState = actionTransitionFunction.call(this,event);
-	
+	        if(!this.currentState)return;	        	
+	        var actionTransitionFunction = this.states[this.currentState][event.type];	
+	        if(!actionTransitionFunction)return;	
+	        var nextState = actionTransitionFunction.call(this,event);	
 	        this.currentState = nextState;
-	
 	    },
 	
 	    //定义事件 (行为层)
-	
 	    defineEvents:function(){
-	
 	        var _this = this,
 	        events = this.events;	
 	        for(k in events){	
