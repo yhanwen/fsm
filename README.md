@@ -260,36 +260,23 @@
 	states:{	
 	    //收起（初始状态）
 	    "fold":{
-	
-	    },
-	
+	    },	
 	    //展开状态
-	    "unfold":{
-	
-	    },
-	
+	    "unfold":{	
+	    },	
 	    //高亮状态
-	    "highlight":{
-	
+	    "highlight":{	
 	    }   
 	},
 	
-	events:{
-	
-	    "unfoldmenu":function(fn){
-	
-	    },
-	
-	    "foldmenu":function(fn){
-	
-	    },
-	
-	    "overitem":function(fn){
-	
-	    },
-	
-	    "clickitem":function(fn){
-	
+	events:{	
+	    "unfoldmenu":function(fn){	
+	    },	
+	    "foldmenu":function(fn){	
+	    },	
+	    "overitem":function(fn){	
+	    },	
+	    "clickitem":function(fn){	
 	    }
 	}
 
