@@ -84,80 +84,81 @@
 如上面这段代码就描述了在fold状态下，可以触发unfoldmenu这个用户行为来转移到unfold状态，
 我们通过函数返回值的形式来通知FSM下一步的状态。
 这样，我们就可以通过这种形式描述所有的状态，结构如下：
-
-states:{
-
-    //收起（初始状态）
-
-    "fold":{
-
-        unfoldmenu:function(event){
-
-            _this.unfold();
-
-            return "unfold";
-
-        }
-
-    },
-
-    //展开状态
-
-    "unfold":{
-
-        foldmenu:function(event){
-
-            _this.fold();
-
-            return "fold";
-
-        },
-
-        overitem:function(event){
-
-            _this.highlightItem(event.currentItem);
-
-            return "highlight";
-
-        }
-
-    },
-
-    //高亮状态
-
-    "highlight":{
-
-        foldmenu:function(event){
-
-            _this.fold();
-
-            return "fold";
-
-        },
-
-        //选中条目
-
-        clickitem:function(event){
-
-            _this.selectItem(event.currentItem);
-
-            return "fold";
-
-        },
-
-        overitem:function(event){
-
-            _this.highlightItem(event.currentItem);
-
-            return "highlight";
-
-        }
-
-    }   
-}
+	
+	states:{
+	
+	    //收起（初始状态）
+	
+	    "fold":{
+	
+	        unfoldmenu:function(event){
+	
+	            _this.unfold();
+	
+	            return "unfold";
+	
+	        }
+	
+	    },
+	
+	    //展开状态
+	
+	    "unfold":{
+	
+	        foldmenu:function(event){
+	
+	            _this.fold();
+	
+	            return "fold";
+	
+	        },
+	
+	        overitem:function(event){
+	
+	            _this.highlightItem(event.currentItem);
+	
+	            return "highlight";
+	
+	        }
+	
+	    },
+	
+	    //高亮状态
+	
+	    "highlight":{
+	
+	        foldmenu:function(event){
+	
+	            _this.fold();
+	
+	            return "fold";
+	
+	        },
+	
+	        //选中条目
+	
+	        clickitem:function(event){
+	
+	            _this.selectItem(event.currentItem);
+	
+	            return "fold";
+	
+	        },
+	
+	        overitem:function(event){
+	
+	            _this.highlightItem(event.currentItem);
+	
+	            return "highlight";
+	
+	        }
+	
+	    }   
+	}
 
 在定义好状态后，我们还需要设定一个初始状态：
-initState:"fold"
+
+	initState:"fold"
 
 2.描述用户行为
 我们使用一个方法来描述用户行为，即驱动FSM发生状态转移的事件：
@@ -203,112 +204,112 @@ initState:"fold"
 通过上边的例子可以看出，我们可以将一个很复杂的动作定义为一个用户行为，也可以将几个不同的动作定义为一个用户行为，将用户行为和组件的动作彻底分开。
 与状态相同，我们也将所有的用户行为放在一个对象中。
 
-events:{
-
-    "unfoldmenu":function(fn){
-
-    },
-
-    "foldmenu":function(fn){
-
-    },
-
-    "overitem":function(fn){
-
-    },
-
-    "clickitem":function(fn){
-
-    }
-}
+	events:{
+	
+	    "unfoldmenu":function(fn){
+	
+	    },
+	
+	    "foldmenu":function(fn){
+	
+	    },
+	
+	    "overitem":function(fn){
+	
+	    },
+	
+	    "clickitem":function(fn){
+	
+	    }
+	}
 
 3.描述组件行为
 由于组件行为一般都包含对组件本身的一些直接操作，可以作为API开放给用户使用，因此我们把描述组件行为的方法放在组件的prototype上，这部分代码如下：
 
-S.augment(SlideMenu,S.EventTarget,{
-
-    setText:function(){
-
-        var _this = this,
-
-        select = _this.select;
-
-        
-
-        D.html(select,_this.text);
-
-    },
-
-    unfold:function(){
-
-        var _this = this,
-
-        slideBox = _this.slideBox;
-
-        if(!_this.isFold)return;
-
-        _this.isFold = false;
-
-        D.show(slideBox);
-
-    },
-
-    fold:function(){
-
-        var _this = this,
-
-        options = _this.options,
-
-        slideBox = _this.slideBox;
-
-        if(_this.isFold)return;
-
-        D.removeClass(options,"hover");
-
-        _this.isFold = true;
-
-        D.hide(slideBox);
-
-    },
-
-    highlightItem:function(curItem){
-
-        var _this = this,
-
-        options = _this.options;
-
-        D.removeClass(options,"hover");
-
-        D.addClass(curItem,"hover");
-
-    },
-
-    selectItem:function(curItem){
-
-        var _this = this,
-
-        value = D.attr(curItem,"data-value"),
-
-        text = D.attr(curItem,"data-text");
-
-        _this.value = value;
-
-        _this.text = text;
-
-        _this.setText()
-
-        _this.fold();
-
-        _this.fire("select",{
-
-            value:value,
-
-            text:text
-
-        });
-
-    }
-});
+	S.augment(SlideMenu,S.EventTarget,{
+	
+	    setText:function(){
+	
+	        var _this = this,
+	
+	        select = _this.select;
+	
+	        
+	
+	        D.html(select,_this.text);
+	
+	    },
+	
+	    unfold:function(){
+	
+	        var _this = this,
+	
+	        slideBox = _this.slideBox;
+	
+	        if(!_this.isFold)return;
+	
+	        _this.isFold = false;
+	
+	        D.show(slideBox);
+	
+	    },
+	
+	    fold:function(){
+	
+	        var _this = this,
+	
+	        options = _this.options,
+	
+	        slideBox = _this.slideBox;
+	
+	        if(_this.isFold)return;
+	
+	        D.removeClass(options,"hover");
+	
+	        _this.isFold = true;
+	
+	        D.hide(slideBox);
+	
+	    },
+	
+	    highlightItem:function(curItem){
+	
+	        var _this = this,
+	
+	        options = _this.options;
+	
+	        D.removeClass(options,"hover");
+	
+	        D.addClass(curItem,"hover");
+	
+	    },
+	
+	    selectItem:function(curItem){
+	
+	        var _this = this,
+	
+	        value = D.attr(curItem,"data-value"),
+	
+	        text = D.attr(curItem,"data-text");
+	
+	        _this.value = value;
+	
+	        _this.text = text;
+	
+	        _this.setText()
+	
+	        _this.fold();
+	
+	        _this.fire("select",{
+	
+	            value:value,
+	
+	            text:text
+	
+	        });
+	
+	    }
+	});
 
 =====第三步：实现有限状态机（基于KISSY实现）=======
 
@@ -322,48 +323,48 @@ S.augment(SlideMenu,S.EventTarget,{
 
 代码结构如下：
 
-initState:"fold",
-
-states:{
-
-    //收起（初始状态）
-
-    "fold":{
-
-    },
-
-    //展开状态
-
-    "unfold":{
-
-    },
-
-    //高亮状态
-
-    "highlight":{
-
-    }   
-
-},
-
-events:{
-
-    "unfoldmenu":function(fn){
-
-    },
-
-    "foldmenu":function(fn){
-
-    },
-
-    "overitem":function(fn){
-
-    },
-
-    "clickitem":function(fn){
-
-    }
-}
+	initState:"fold",
+	
+	states:{
+	
+	    //收起（初始状态）
+	
+	    "fold":{
+	
+	    },
+	
+	    //展开状态
+	
+	    "unfold":{
+	
+	    },
+	
+	    //高亮状态
+	
+	    "highlight":{
+	
+	    }   
+	
+	},
+	
+	events:{
+	
+	    "unfoldmenu":function(fn){
+	
+	    },
+	
+	    "foldmenu":function(fn){
+	
+	    },
+	
+	    "overitem":function(fn){
+	
+	    },
+	
+	    "clickitem":function(fn){
+	
+	    }
+	}
 
 FSM需要2个功能：
 1.将用户行为与自定义事件相关联（defineEvents）
@@ -371,84 +372,84 @@ FSM需要2个功能：
 
 代码如下：
 
-function FSM(config){
-
-    this.config = config;
-
-    this.currentState = this.config.initState;
-
-    this.nextState = null;
-
-    this.states = this.config.states;
-
-    this.events = this.config.events;
-
-    
-
-    this.defineEvents();
-
-}
-
-
-
-var proto = {
-
-    //事件驱动状态转换(表现层)
-
-    handleEvents:function(event){
-
-        if(!this.currentState)return;
-
-        
-
-        var actionTransitionFunction = this.states[this.currentState][event.type];
-
-        if(!actionTransitionFunction)return;
-
-        var nextState = actionTransitionFunction.call(this,event);
-
-        this.currentState = nextState;
-
-    },
-
-    //定义事件 (行为层)
-
-    defineEvents:function(){
-
-        var _this = this,
-
-        events = this.events;
-
-        for(k in events){
-
-            (function(k){
-
-                var fn = events[k];
-
-                fn.call(_this,function(event){
-
-                    _this.fire(k,event);
-
-                });
-
-                _this.on(k,_this.handleEvents);
-
-            })(k)
-
-        }
-
-    }
-
-}
-S.augment(FSM, S.EventTarget, proto);
+	function FSM(config){
+	
+	    this.config = config;
+	
+	    this.currentState = this.config.initState;
+	
+	    this.nextState = null;
+	
+	    this.states = this.config.states;
+	
+	    this.events = this.config.events;
+	
+	    
+	
+	    this.defineEvents();
+	
+	}
+	
+	
+	
+	var proto = {
+	
+	    //事件驱动状态转换(表现层)
+	
+	    handleEvents:function(event){
+	
+	        if(!this.currentState)return;
+	
+	        
+	
+	        var actionTransitionFunction = this.states[this.currentState][event.type];
+	
+	        if(!actionTransitionFunction)return;
+	
+	        var nextState = actionTransitionFunction.call(this,event);
+	
+	        this.currentState = nextState;
+	
+	    },
+	
+	    //定义事件 (行为层)
+	
+	    defineEvents:function(){
+	
+	        var _this = this,
+	
+	        events = this.events;
+	
+	        for(k in events){
+	
+	            (function(k){
+	
+	                var fn = events[k];
+	
+	                fn.call(_this,function(event){
+	
+	                    _this.fire(k,event);
+	
+	                });
+	
+	                _this.on(k,_this.handleEvents);
+	
+	            })(k)
+	
+	        }
+	
+	    }
+	
+	}
+	S.augment(FSM, S.EventTarget, proto);
 
 然后，只需要实例化一个FSM即可
 
-new FSM({
-     initState:"fold",
-     states:{...},
-     events:{...}
-});
+	new FSM({
+	     initState:"fold",
+	     states:{...},
+	     events:{...}
+	});
 
 最后，总结一下。
 使用FSM模式设计和实现交互组件，可以获得以下特性：
