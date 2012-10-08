@@ -16,19 +16,22 @@
  * 第二步：通过代码来描述设计出来的内容
  * 第三步：实现一个有限状态机让组件工作起来
 
-##第一步：设计阶段
+
+## 第一步：设计阶段
 
 首先，我们需要确定组件的状态和状态间的转换关系
 
 通过对组件可能会发生的行为进行研究，我们为组件设计了以下三个状态：
 
 1.收起状态（fold）:
+
 组件的初始状态，用户可能会进行以下操作：
 
     展开下拉框（unfoldmenu）转移到展开状态（unfold）
 
 
 2.展开状态（unfold）:
+
 用户展开下拉框的状态，用户可能会进行以下操作：
 
     收起下拉框（foldmenu）转移到收起状态（fold）
@@ -36,6 +39,7 @@
 
 
 3.高亮状态（highlight）:
+
 鼠标经过选项时，高亮经过的选项，用户可能会进行以下操作：
 
     收起下拉框（foldmenu）转移到收起状态（fold）
@@ -44,12 +48,14 @@
 
 
 以上就是这个小组件可能会有的三种状态，用一个状态转换图来表示如下：
-在状态描述中包含了触发状态发生转移的动作（事件）
-可以很明显的看出这些事件并不是浏览器中原生的事件。
-这里，我们使用自定义事件来描述用户的行为，这样我们可以使得用户行为和组件行为的逻辑完全分离，代码将会更容易理解和维护。
+
+ * 在状态描述中包含了触发状态发生转移的动作（事件）
+ * 可以很明显的看出这些事件并不是浏览器中原生的事件。
+ * 这里，我们使用自定义事件来描述用户的行为，这样我们可以使得用户行为和组件行为的逻辑完全分离，代码将会更容易理解和维护。
 
 
 定义用户行为：
+
 在这个组件里，我们有以下四种用户行为：
 
     展开下拉框（unfoldmenu）：鼠标点击橙色区域时触发
@@ -58,6 +64,7 @@
     鼠标经过选项（overitem）：鼠标经过下拉框中的某个选项
 
 定义组件行为：
+
 在状态转移的过程中，组件本身会有很多动作，如显示下拉框等，我们接下来在上面的状态图中加入转移过程中组件的动作
 
     fold():收起下拉框
@@ -65,94 +72,67 @@
     highlightItem():高亮某个选项
     selectItem():选中某个选项，并把值填充到橘黄色区域
 
-=====第二步：实现阶段（基于KISSY实现）=======
+## 第二步：实现阶段（基于KISSY实现）
+
 全局变量：S=KISSY, D=S.DOM, E=S.Event
 
 1.描述状态
+
 跟设计过程一样，我们需要用一个结构来描述状态的转移以及转移过程中的动作
+
 我们在这里使用对象来描述：
 
     "fold":{
-
         unfoldmenu:function(event){
-
             _this.unfold();
-
             return "unfold";
-
         }
     }
 
 如上面这段代码就描述了在fold状态下，可以触发unfoldmenu这个用户行为来转移到unfold状态，
+
 我们通过函数返回值的形式来通知FSM下一步的状态。
+
 这样，我们就可以通过这种形式描述所有的状态，结构如下：
 	
 	states:{
-	
 	    //收起（初始状态）
-	
 	    "fold":{
-	
 	        unfoldmenu:function(event){
-	
 	            _this.unfold();
-	
 	            return "unfold";
-	
 	        }
-	
 	    },
-	
+	    
 	    //展开状态
-	
 	    "unfold":{
-	
 	        foldmenu:function(event){
-	
 	            _this.fold();
-	
 	            return "fold";
-	
 	        },
-	
 	        overitem:function(event){
-	
 	            _this.highlightItem(event.currentItem);
-	
 	            return "highlight";
-	
 	        }
 	
 	    },
 	
 	    //高亮状态
-	
 	    "highlight":{
-	
 	        foldmenu:function(event){
-	
 	            _this.fold();
-	
 	            return "fold";
-	
 	        },
 	
 	        //选中条目
-	
 	        clickitem:function(event){
-	
 	            _this.selectItem(event.currentItem);
-	
 	            return "fold";
-	
 	        },
 	
 	        overitem:function(event){
-	
 	            _this.highlightItem(event.currentItem);
-	
 	            return "highlight";
-	
 	        }
 	
 	    }   
@@ -163,47 +143,33 @@
 	initState:"fold"
 
 2.描述用户行为
+
 我们使用一个方法来描述用户行为，即驱动FSM发生状态转移的事件：
 
     "foldmenu":function(fn){
-
         var timeout;
-
         E.on(_this.container,"mouseleave",function(e){
-
             if(timeout)clearTimeout(timeout);
-
             timeout = setTimeout(function(){
-
                 fn();
-
             },1000);
-
         });
-
         E.on([_this.container,_this.slideBox],"mouseenter",function(e){
-
             if(timeout)clearTimeout(timeout);
-
         });
-
         E.on("body","click",function(e){
-
             var target = e.target;
-
             if(!D.get(target,_this.container)){
-
                 if(timeout)clearTimeout(timeout);
-
                 fn();
-
             } 
-
         });
     }
 
 如上面这个代码就定义了foldmenu这个用户行为，同时，FSM会自动将它定义为一个自定义事件，我们通过传入的回调函数fn来通知FSM触发这个事件的时机。
+
 通过上边的例子可以看出，我们可以将一个很复杂的动作定义为一个用户行为，也可以将几个不同的动作定义为一个用户行为，将用户行为和组件的动作彻底分开。
+
 与状态相同，我们也将所有的用户行为放在一个对象中。
 
 	events:{
@@ -231,94 +197,59 @@
 	S.augment(SlideMenu,S.EventTarget,{
 	
 	    setText:function(){
-	
-	        var _this = this,
-	
-	        select = _this.select;
-	
-	        
-	
-	        D.html(select,_this.text);
-	
+	        var _this = this,	
+	        select = _this.select;	
+	        D.html(select,_this.text);	
 	    },
 	
-	    unfold:function(){
-	
-	        var _this = this,
-	
-	        slideBox = _this.slideBox;
-	
-	        if(!_this.isFold)return;
-	
-	        _this.isFold = false;
-	
-	        D.show(slideBox);
-	
+	    unfold:function(){	
+	        var _this = this,	
+	        slideBox = _this.slideBox;	
+	        if(!_this.isFold)return;	
+	        _this.isFold = false;	
+	        D.show(slideBox);	
 	    },
 	
-	    fold:function(){
-	
-	        var _this = this,
-	
-	        options = _this.options,
-	
-	        slideBox = _this.slideBox;
-	
-	        if(_this.isFold)return;
-	
-	        D.removeClass(options,"hover");
-	
-	        _this.isFold = true;
-	
-	        D.hide(slideBox);
-	
+	    fold:function(){	
+	        var _this = this,	
+	        options = _this.options,	
+	        slideBox = _this.slideBox;	
+	        if(_this.isFold)return;	
+	        D.removeClass(options,"hover");	
+	        _this.isFold = true;	
+	        D.hide(slideBox);	
 	    },
 	
-	    highlightItem:function(curItem){
-	
-	        var _this = this,
-	
-	        options = _this.options;
-	
-	        D.removeClass(options,"hover");
-	
-	        D.addClass(curItem,"hover");
-	
+	    highlightItem:function(curItem){	
+	        var _this = this,	
+	        options = _this.options;	
+	        D.removeClass(options,"hover");	
+	        D.addClass(curItem,"hover");	
 	    },
 	
-	    selectItem:function(curItem){
-	
-	        var _this = this,
-	
-	        value = D.attr(curItem,"data-value"),
-	
-	        text = D.attr(curItem,"data-text");
-	
-	        _this.value = value;
-	
-	        _this.text = text;
-	
-	        _this.setText()
-	
-	        _this.fold();
-	
-	        _this.fire("select",{
-	
-	            value:value,
-	
-	            text:text
-	
-	        });
-	
+	    selectItem:function(curItem){	
+	        var _this = this,	
+	        value = D.attr(curItem,"data-value"),	
+	        text = D.attr(curItem,"data-text");	
+	        _this.value = value;	
+	        _this.text = text;	
+	        _this.setText()	
+	        _this.fold();	
+	        _this.fire("select",{	
+	            value:value,	
+	            text:text	
+	        });	
 	    }
 	});
 
-=====第三步：实现有限状态机（基于KISSY实现）=======
+## 第三步：实现有限状态机（基于KISSY实现）
 
 前面我们定义了组件的状态，用户行为，以及组件本身的动作，
+
 接下来我们来实现一个有限状态机（FSM），让整个组件工作起来。
 
 通过上面实现的代码，我们可以看出FSM的输入有以下三个：
+
 1.初始状态
 2.状态描述对象
 3.用户行为描述对象
@@ -399,27 +330,16 @@ FSM需要2个功能：
 	    defineEvents:function(){
 	
 	        var _this = this,
-	
-	        events = this.events;
-	
-	        for(k in events){
-	
-	            (function(k){
-	
-	                var fn = events[k];
-	
-	                fn.call(_this,function(event){
-	
-	                    _this.fire(k,event);
-	
-	                });
-	
-	                _this.on(k,_this.handleEvents);
-	
-	            })(k)
-	
-	        }
-	
+	        events = this.events;	
+	        for(k in events){	
+	            (function(k){	
+	                var fn = events[k];	
+	                fn.call(_this,function(event){	
+	                    _this.fire(k,event);	
+	                });	
+	                _this.on(k,_this.handleEvents);	
+	            })(k)	
+	        }	
 	    }
 	
 	}
